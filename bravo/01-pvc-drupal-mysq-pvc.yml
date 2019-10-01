@@ -1,0 +1,23 @@
+
+#Deploy the below architecture for Drupal CMS.
+#
+#Click on each icon to see more details. Once done click Check to test your work.
+#
+#    Claim Name: drupal-mysql-pvc
+#    Storage Request: 5Gi
+#    Access modes: ReadWriteOnce 
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+   name: drupal-mysql-pvc
+   labels:
+      app: drupal
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi  
+

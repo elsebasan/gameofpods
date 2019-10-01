@@ -1,0 +1,22 @@
+
+#Name: drupal-mysql-service
+#Type: ClusterIP
+#Port: 3306 
+
+
+#Service Endpoint: drupal-mysql pod 
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drupal-mysql-service
+  labels:
+    app: drupal
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: drupal
+    tier: mysql
+  type: ClusterIP

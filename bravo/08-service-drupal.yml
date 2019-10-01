@@ -1,0 +1,25 @@
+#frontend service name: drupal-service
+#drupal-service configured as NodePort
+#drupal-service uses NodePort 30095 
+#
+
+#Service "drupal-service" connects to "drupal" pod with label "app=drupal" 
+
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: drupal-service 
+spec:
+  selector:
+    app: drupal
+    tier: front
+  type: NodePort
+  ports:
+  - name: http 
+    port:  80
+    targetPort: 80
+    nodePort: 30095
+    protocol: TCP
+

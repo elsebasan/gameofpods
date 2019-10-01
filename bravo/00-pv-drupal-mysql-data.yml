@@ -1,0 +1,22 @@
+# antes crear  en el nodo
+#mkdir /drupal-mysql-data
+#mkdir /drupal-data 
+#Volume Name: drupal-mysql-pv
+#Storage: 5Gi
+#Access modes: ReadWriteOnce
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: drupal-mysql-pv
+spec:
+  accessModes:
+     - ReadWriteOnce
+  capacity:
+    storage: 5Gi
+  hostPath:
+    path: /drupal-mysql-data
+    type: Directory
+

@@ -1,0 +1,66 @@
+#    Deployment Name: drupal
+#    Replicas: 1
+#    Image: drupal:8.6
+#    Deployment has an initContainer, name: 'init-sites-volume'
+#    initContainer 'init-sites-volume', image: drupal:8.6
+#    initContainer 'init-sites-volume', persistentVolumeClaim: drupal-pvc
+#    initContainer 'init-sites-volume', mountPath: /data
+#    initContainer 'init-sites-volume', Command: [ "/bin/bash", "-c" ], initContainer: Args: [ 'cp -r /var/www/html/sites/ /data/; chown www-data:www-data /data/ -R' ]
+#    Deployment 'drupal' uses correct pvc: drupal-pvc
+#    Deployment has a regular container, name: 'drupal', image: 'drupal:8.6'
+#    container: 'drupal', Volume mountPath: /var/www/html/modules, subPath: modules
+#    container: 'drupal', Volume mountPath: /var/www/html/profiles, subPath: profiles
+#    container: 'drupal', Volume mountPath: /var/www/html/sites, subPath: sites
+#    container: 'drupal', Volume mountPath: /var/www/html/themes, subPath: themes
+#    Deployment: "drupal" running
+#    Deployment: 'drupal' has label 'app=drupal' 
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: drupal
+  labels:
+    app: drupal
+spec:
+  replicas: 1
+  selector: 
+    matchLabels:
+      app: drupal
+      tier: front
+  template:
+    metadata:
+      labels:
+        app: drupal
+        tier: front
+    spec:
+      containers:
+      - name: drupal
+        image: drupal:8.6
+        volumeMounts:
+        - name: drupal-persistent-storage
+          mountPath: /var/www/html/modules
+          subPath: modules
+        - name: drupal-persistent-storage
+          mountPath: /var/www/html/profiles
+          subPath: profiles
+        - name: drupal-persistent-storage
+          mountPath: /var/www/html/sites
+          subPath: sites
+        - name: drupal-persistent-storage
+          mountPath: /var/www/html/themes
+          subPath: themes
+      initContainers:
+      - name: init-sites-volume
+        image: drupal:8.6
+        command: [ "/bin/bash", "-c" ]
+        args: [ 'cp -r /var/www/html/sites/ /data/; chown www-data:www-data /data/ -R' ] 
+        volumeMounts:
+          - name: drupal-persistent-storage
+            mountPath: /data
+
+      volumes:
+      - name: drupal-persistent-storage
+        persistentVolumeClaim:
+          claimName: drupal-pvc
+
